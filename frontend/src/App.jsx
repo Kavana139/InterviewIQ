@@ -1,8 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const [role, setRole] = useState("Backend");
   const [difficulty, setDifficulty] = useState("Easy");
+  const [backendStatus, setBackendStatus] = useState("checking...");
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/health")
+      .then((res) => res.json())
+      .then((data) => setBackendStatus(data.status))
+      .catch(() => setBackendStatus("not reachable"));
+  }, []);
 
   function handleStart() {
     alert(`Starting a ${difficulty} ${role} interview`);
@@ -11,6 +19,7 @@ function App() {
   return (
     <div style={{ maxWidth: 400, margin: "40px auto", fontFamily: "sans-serif" }}>
       <h1>InterviewIQ</h1>
+      <p>Backend status: {backendStatus}</p>
       <p>Set up your mock interview</p>
 
       <div style={{ marginBottom: 16 }}>
